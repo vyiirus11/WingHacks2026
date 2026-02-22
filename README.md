@@ -91,16 +91,15 @@ Built with intentional focus on:
 
 <br>
 
-```bash
-git clone https://github.com/vyiirus11/WingHacks2026.git
-```
-
 ![clone](/Curriculum/ss/clone.png)
 </li>
 
 <br>
 
 - **MAKE SURE** you have <a href="https://desktop.github.com/download/"> GitHub Desktop </a> downloaded
+
+<br>
+
 <li>To access a local host preview of the platform, download the extension 
     <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server"
     >

@@ -84,9 +84,47 @@ Built with intentional focus on:
 
 ---
 
-## 🚀 Get Started
+## 🚀 Testing
+<ol>
+<li>Clone the 
+<a href="https://github.com/vyiirus11/WingHacks2026.git"> repo: </a>
 
-Clone the repo:
+<br>
 
 ```bash
 git clone https://github.com/vyiirus11/WingHacks2026.git
+```
+
+![clone](/Curriculum/ss/clone.png)
+</li>
+
+<br>
+
+- **MAKE SURE** you have <a href="https://desktop.github.com/download/"> GitHub Desktop </a> downloaded
+<li>To access a local host preview of the platform, download the extension 
+    <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server"
+    >
+    Live Preview
+    </a>
+    in 
+    <a href="https://code.visualstudio.com/download">
+    Visual Studio Code (VSCode):
+    </a>
+
+<br>
+
+![live](/Curriculum/ss/live.png)
+
+<br>
+
+- **MAKE SURE** the extension is enabled and everything is updated
+- **MAKE SURE** you have index.html opened (this is where you will be able to locally open the webpage using the extension)
+
+<br>
+
+![live](/Curriculum/ss/preview.png)
+
+</br>
+
+- You should be able to see the webpage tab popup to the side
+</ol>

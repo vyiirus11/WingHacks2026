@@ -1,0 +1,530 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Circulumn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      --navy:   #1F2430;
+      --slate:  #5E6470;
+      --orange: #F28C28;
+      --mauve:  #7E5A6A;
+
+      --glass:  rgba(255,245,248,0.72);
+      --glass2: rgba(255,255,255,0.62);
+      --border: rgba(255,255,255,0.62);
+      --shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    html, body { font-family: Georgia, serif; }
+
+    /* ⭐ star speckle pattern */
+    .stars {
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='white' fill-opacity='0.28'%3E%3Ccircle cx='18' cy='26' r='1'/%3E%3Ccircle cx='64' cy='48' r='1'/%3E%3Ccircle cx='110' cy='18' r='1'/%3E%3Ccircle cx='160' cy='60' r='1'/%3E%3Ccircle cx='206' cy='34' r='1'/%3E%3Ccircle cx='30' cy='118' r='1'/%3E%3Ccircle cx='86' cy='154' r='1'/%3E%3Ccircle cx='146' cy='138' r='1'/%3E%3Ccircle cx='196' cy='176' r='1'/%3E%3Ccircle cx='208' cy='120' r='1'/%3E%3Ccircle cx='126' cy='202' r='1'/%3E%3Ccircle cx='44' cy='200' r='1'/%3E%3C/g%3E%3Cg fill='white' fill-opacity='0.22'%3E%3Cpath d='M60 86l2.1 4.7 4.9 1.6-4 3 0.1 5-4.1-2.7-4.2 2.6 0.2-5-4-3 4.9-1.6z'/%3E%3Cpath d='M176 112l1.7 3.8 4 1.3-3.2 2.4 0.1 4-3.3-2.2-3.4 2.2 0.1-4-3.2-2.4 4-1.3z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 260px 260px;
+      background-repeat: repeat;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* 🌙 navy moon-pearl background */
+    .bg-app {
+      position: relative;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 650px at 20% 0%, rgba(255,255,255,0.18), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(255, 226, 236, 0.10), transparent 70%),
+        radial-gradient(1100px 800px at 50% 120%, rgba(255,255,255,0.08), transparent 70%),
+        linear-gradient(180deg, #0E1320 0%, #141A2A 55%, #0B1020 100%);
+      overflow-x: hidden;
+    }
+
+    .bg-app::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(600px 420px at 18% 10%, rgba(255,255,255,0.22), transparent 65%),
+        radial-gradient(520px 380px at 78% 22%, rgba(255, 210, 225, 0.10), transparent 70%);
+      pointer-events:none;
+    }
+
+    .bg-app::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 900px at 50% 30%, rgba(255,255,255,0.05), transparent 60%);
+      pointer-events:none;
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    /* 📄 subtle paper texture inside glass */
+    .paper-texture::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 16px;
+      pointer-events:none;
+      opacity: 0.42;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.55), transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.40), transparent 60%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.15) 0px,
+          rgba(255,255,255,0.15) 1px,
+          rgba(255,255,255,0.05) 8px,
+          rgba(255,255,255,0.05) 14px
+        );
+      mix-blend-mode: soft-light;
+    }
+
+    .glass-card {
+      background: var(--glass2);
+      border: 1px solid rgba(255,255,255,0.68);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 16px 34px rgba(0,0,0,0.10);
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: white;
+      box-shadow: 0 12px 24px rgba(31,36,48,0.20);
+    }
+    .btn-primary:hover { filter: brightness(1.06); }
+
+    .btn-soft {
+      background: rgba(255, 245, 248, 0.85);
+      border: 1px solid rgba(198,91,124,0.28);
+      box-shadow: 0 10px 18px rgba(198,91,124,0.08);
+      color: var(--navy);
+    }
+
+    .tab-active {
+      background: var(--navy) !important;
+      color: white !important;
+      border-color: transparent !important;
+    }
+
+    .input-soft {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(198,91,124,0.22);
+      outline: none;
+    }
+    .input-soft:focus{
+      border-color: rgba(242,140,40,0.65);
+      box-shadow: 0 0 0 4px rgba(242,140,40,0.14);
+    }
+
+    .accent-line {
+      height: 3px;
+      width: 240px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #E7B8A5, #F3D3C6, #E7B8A5);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.20);
+    }
+
+    .chip {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.45);
+      color: var(--navy);
+    }
+    .chip.orange {
+      background: rgba(242,140,40,0.14);
+      border-color: rgba(242,140,40,0.35);
+      color: var(--orange);
+    }
+    .chip.mauve {
+      background: rgba(126,90,106,0.14);
+      border-color: rgba(126,90,106,0.25);
+      color: var(--mauve);
+    }
+
+    .muted { color: rgba(255,255,255,0.75); }
+    .title { color: rgba(255,255,255,0.96); text-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+    .subtitle { color: rgba(255,255,255,0.82); text-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+
+    /* ===== Calendar styling ===== */
+    .calendar-card{
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    .calendar-card::after{
+      content:"✦";
+      position:absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 18px;
+      opacity: 0.65;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 12px 24px rgba(0,0,0,0.22);
+      pointer-events:none;
+    }
+    .calendar-card::before{
+      content:"✦";
+      position:absolute;
+      top: 10px;
+      left: 12px;
+      font-size: 18px;
+      opacity: 0.65;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 12px 24px rgba(0,0,0,0.22);
+      pointer-events:none;
+    }
+
+    .calendar-stars{
+      position:absolute;
+      inset:-40px;
+      pointer-events:none;
+      opacity:0.22;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.7), transparent 22%),
+        radial-gradient(circle at 88% 26%, rgba(255,255,255,0.55), transparent 24%),
+        radial-gradient(circle at 38% 92%, rgba(255,255,255,0.45), transparent 26%),
+        radial-gradient(circle at 74% 78%, rgba(255,255,255,0.35), transparent 26%);
+      mix-blend-mode: soft-light;
+    }
+
+    .cal-day {
+      border: 1px solid rgba(31,36,48,0.10);
+      background: rgba(255,255,255,0.60);
+      border-radius: 16px;
+      min-height: 92px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .cal-day:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.10);
+    }
+    .cal-num{
+      font-weight: 700;
+      color: var(--navy);
+      opacity: 0.9;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .cal-events{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .cal-pill{
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.65);
+      background: rgba(255,245,248,0.85);
+      color: var(--navy);
+      cursor: pointer;
+      user-select: none;
+    }
+    .cal-pill:hover { filter: brightness(1.03); }
+    .cal-pill.mauve { background: rgba(126,90,106,0.14); border-color: rgba(126,90,106,0.25); }
+    .cal-pill.orange { background: rgba(242,140,40,0.14); border-color: rgba(242,140,40,0.35); }
+    .cal-pill.navy { background: rgba(31,36,48,0.10); border-color: rgba(31,36,48,0.18); }
+
+    .cal-legend {
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* 🐱 Emoji Cat Sticker + sparkles */
+    .cat-sticker{
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.60);
+      border: 1px solid rgba(255,255,255,0.70);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      z-index: 5;
+      position: relative;
+      overflow: visible; /* allow sparkles to pop out */
+    }
+
+    .cat-face{
+      font-size: 30px;
+      line-height: 1;
+      transform-origin: center;
+      opacity: 0.96;
+    }
+
+    /* tiny idle float */
+    @keyframes kittyFloat {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-1px); }
+      100% { transform: translateY(0px); }
+    }
+    .cat-face { animation: kittyFloat 2.6s ease-in-out infinite; }
+
+    
+    @keyframes popGlow {
+      0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(242,140,40,0.0)); }
+      35% { transform: scale(1.06); filter: drop-shadow(0 6px 10px rgba(242,140,40,0.18)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(242,140,40,0.0)); }
+    }
+    .cat-sticker.cat-animate .cat-face { animation: popGlow 650ms ease-in-out 1; }
+
+   
+    .sparkle{
+      position:absolute;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(0) scale(0.8);
+      pointer-events:none;
+      filter: drop-shadow(0 6px 10px rgba(255,255,255,0.25));
+    }
+
+    @keyframes sparkleUp {
+      0%   { opacity: 0; transform: translateY(8px) scale(0.7); }
+      20%  { opacity: 0.9; }
+      60%  { opacity: 0.85; }
+      100% { opacity: 0; transform: translateY(-14px) scale(1.05); }
+    }
+
+    .cat-sticker.cat-sparkle .sparkle{
+      animation: sparkleUp 620ms ease-out 1;
+    }
+
+    /* positions around the cat */
+    .sparkle.s1 { left: -6px; top: 6px; }
+    .sparkle.s2 { right: -6px; top: 10px; }
+    .sparkle.s3 { left: 18px; bottom: -6px; font-size: 12px; }
+  </style>
+</head>
+
+<body class="bg-app">
+  <div class="stars" style="position:fixed; inset:0; z-index:0;"></div>
+
+  <div class="max-w-6xl mx-auto p-6 relative" style="z-index:1;">
+    <header class="mb-6">
+      <h1 class="text-6xl title" style="letter-spacing:1px;">Circulumn</h1>
+      <p class="mt-2 text-lg subtitle"> Circulumn: girlies conquer college! Your all-in-one platform for study spaces, mentorship, and analytics to help you thrive in your academic journey.</p>
+      <div class="mt-4 accent-line"></div>
+    </header>
+
+    <div class="glass rounded-2xl p-6 paper-texture">
+
+      
+      <div class="flex gap-3 mb-6 flex-wrap">
+        <button class="tab tab-active px-5 py-2 rounded-xl" data-tab="spaces">🏫 Study Spaces</button>
+        <button class="tab btn-soft px-5 py-2 rounded-xl" data-tab="mentors">🤝 Mentorship Matching</button>
+        <button class="tab btn-soft px-5 py-2 rounded-xl" data-tab="analytics">📊 Analytics</button>
+      </div>
+
+      <section id="tab-spaces" class="tab-panel">
+        <div class="flex gap-2 items-center mb-4">
+          <input id="spaceFilter" class="w-full rounded-xl p-3 input-soft"
+            placeholder="Filter by tag: quiet, late-night, well-lit..." />
+          <button id="btnLoadSpaces" class="px-4 py-3 rounded-xl btn-primary">Search</button>
+        </div>
+        <div id="spacesList" class="grid md:grid-cols-2 gap-3"></div>
+      </section>
+
+      <section id="tab-mentors" class="tab-panel hidden">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass-card p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <h2 class="font-bold text-xl" style="color:var(--navy);">Mentee Profile</h2>
+              <span class="chip mauve">Match Engine</span>
+            </div>
+            <p class="text-sm" style="color:#1F2430; opacity:0.75; margin-top:4px;">
+              We score based on course overlap, major fit, interests, and availability.
+            </p>
+
+            <div class="mt-3 space-y-2">
+              <input id="mMajor" class="rounded-xl p-2 w-full input-soft" placeholder="Major (e.g., Computer Science)" />
+              <input id="mYear" class="rounded-xl p-2 w-full input-soft" placeholder="Year (e.g., Sophomore)" />
+              <input id="mCourses" class="rounded-xl p-2 w-full input-soft" placeholder="Courses needing help (comma) e.g., COP3502, MAC2311" />
+              <input id="mInterests" class="rounded-xl p-2 w-full input-soft" placeholder="Interests (comma) e.g., research, internships" />
+              <input id="mAvail" class="rounded-xl p-2 w-full input-soft" placeholder="Availability (comma) e.g., Mon 6-8pm, Wed 4-6pm" />
+              <button id="btnMatch" class="px-4 py-2 rounded-xl btn-primary w-full">Find Mentors</button>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <h2 class="font-bold text-xl" style="color:var(--navy);">Matches</h2>
+              <span class="chip orange">Top 8</span>
+            </div>
+            <div id="mentorResults" class="mt-3 space-y-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-analytics" class="tab-panel hidden">
+        <div class="flex justify-between items-center mb-6">
+          <button id="btnLoadAnalytics" class="btn-primary px-5 py-3 rounded-xl">Refresh Analytics</button>
+          <div style="color:#1F2430; opacity:0.6;">Live aggregation from MongoDB Atlas</div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="flex justify-between items-center mb-3">
+              <h2 class="text-2xl font-bold" style="color:var(--navy);">Hardest Courses</h2>
+              <span class="chip orange">Stress</span>
+            </div>
+            <p style="color:#1F2430; opacity:0.75;" class="mb-3">Avg stress from student check-ins.</p>
+            <div id="hardestCourses" class="text-sm" style="color:#1F2430;"></div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="flex justify-between items-center mb-3">
+              <h2 class="text-2xl font-bold" style="color:var(--navy);">Top Study Spaces</h2>
+              <span class="chip mauve">Confidence</span>
+            </div>
+            <p style="color:#1F2430; opacity:0.75;" class="mb-3">Composite of study + safety + inclusivity.</p>
+            <div id="topSpaces" class="text-sm" style="color:#1F2430;"></div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="flex justify-between items-center mb-3">
+              <h2 class="text-2xl font-bold" style="color:var(--navy);">Safety Flags</h2>
+              <span class="chip orange">Reports</span>
+            </div>
+            <p style="color:#1F2430; opacity:0.75;" class="mb-3">Tag-based safety signals.</p>
+            <div id="safetyFlags" class="text-sm" style="color:#1F2430;"></div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex items-center gap-3 mb-3 flex-wrap">
+            <h2 class="text-2xl font-bold" style="color:var(--navy);">Dashboard Notes</h2>
+            <span class="chip">Aggregation Pipelines</span>
+            <span class="chip mauve">Tags + Search Ready</span>
+            <span class="chip orange">Orange = attention</span>
+          </div>
+          <p style="color:#1F2430; opacity:0.75;">
+            This view is computed live from MongoDB Atlas. Judges can verify impact + database usage instantly.
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Calendar -->
+    <div class="mt-8 glass rounded-2xl p-6 paper-texture calendar-card" id="calendarCard">
+      <div class="calendar-stars"></div>
+
+      <div class="flex flex-wrap items-center gap-3 justify-between relative">
+        <div>
+          <h2 class="text-2xl font-bold" style="color:var(--navy);">Calendar</h2>
+          <p style="color:#1F2430; opacity:0.75;">
+            Click a day to add a cute event. Click an emoji tag to remove it.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="calPrev" class="btn-soft px-4 py-2 rounded-xl">←</button>
+          <div id="calTitle" class="font-bold" style="color:var(--navy); min-width:170px; text-align:center;"></div>
+          <button id="calNext" class="btn-soft px-4 py-2 rounded-xl">→</button>
+        </div>
+      </div>
+
+      <div class="mt-4 cal-legend relative">
+        <span class="cal-pill mauve" data-kind="mentor">🤝 Mentor meeting</span>
+        <span class="cal-pill orange" data-kind="study">🎀 Study date</span>
+        <span class="cal-pill navy" data-kind="busy">🧸 Busy / deadline</span>
+        <span class="cal-pill" data-kind="matcha">🍵 Matcha focus</span>
+        <span class="cal-pill" data-kind="coffee">☕ Coffee grind</span>
+        <span class="cal-pill" data-kind="kpop">🫰 Music boost</span>
+        <span class="cal-pill" data-kind="cat">🐾 Self-care</span>
+        <span class="cal-pill" data-kind="reading">📚 Reading</span>
+        <span class="cal-pill" data-kind="art">🎨 Art day</span>
+      </div>
+
+      <div class="mt-5 grid grid-cols-7 gap-3 mb-2 relative">
+        <div class="text-xs muted text-center">Sun</div>
+        <div class="text-xs muted text-center">Mon</div>
+        <div class="text-xs muted text-center">Tue</div>
+        <div class="text-xs muted text-center">Wed</div>
+        <div class="text-xs muted text-center">Thu</div>
+        <div class="text-xs muted text-center">Fri</div>
+        <div class="text-xs muted text-center">Sat</div>
+      </div>
+
+      <div id="calendarGrid" class="grid grid-cols-7 gap-3 relative"></div>
+
+      <div class="mt-5 flex items-center justify-between flex-wrap gap-3 relative">
+        <div style="color:#1F2430; opacity:0.75;">
+          Tip: 🍵 for focus days, 🫰 for vibe resets, 🐾 for self-care.
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- 🐱 Cat sticker with sparkles -->
+          <div class="cat-sticker" aria-hidden="true">
+            <span class="sparkle s1">✦</span>
+            <span class="sparkle s2">✦</span>
+            <span class="sparkle s3">✧</span>
+            <span id="catFace" class="cat-face">🐱</span>
+          </div>
+
+          <button id="calClear" class="btn-primary px-4 py-2 rounded-xl" style="position:relative; z-index:3;">
+            Clear month
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-6 text-sm subtitle">
+      Built for: Education Track + Women-Centric Track + Best Use of MongoDB Atlas
+    </footer>
+  </div>
+
+  <script>
+    function setActiveTab(tabName) {
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+      const panel = document.getElementById("tab-" + tabName);
+      if (panel) panel.classList.remove("hidden");
+
+      document.querySelectorAll(".tab").forEach(b => {
+        b.classList.remove("tab-active");
+        b.classList.add("btn-soft");
+      });
+
+      const btn = document.querySelector('.tab[data-tab="' + tabName + '"]');
+      if (btn) {
+        btn.classList.remove("btn-soft");
+        btn.classList.add("tab-active");
+      }
+    }
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+    });
+    setActiveTab("spaces");
+  </script>
+
+  <script src="./app.js"></script>
+  <script src="./calendar.js"></script>
+</body>
+</html>

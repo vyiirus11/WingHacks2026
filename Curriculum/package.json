@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Women-centric academic support platform (WingHacks 2026)",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
